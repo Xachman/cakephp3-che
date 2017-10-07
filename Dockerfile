@@ -5,15 +5,12 @@ EXPOSE 4403 80 9876 22
 LABEL che:server:80:ref=apache2 che:server:80:protocol=http che:server:9876:ref=codeserver che:server:9876:protocol=http
 
 RUN apt-get update && \
-    apt-get -y install sudo openssh-server procps wget unzip mc curl subversion software-properties-common python-software-properties && \
+    apt-get -y install sudo openssh-server git procps wget unzip mc curl locales subversion software-properties-common python-software-properties && \
     mkdir /var/run/sshd && \
     sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd && \
     echo "%sudo ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
     useradd -u 1000 -G users,sudo -d /home/user --shell /bin/bash -m user && \
     echo "secret\nsecret" | passwd user && \
-    add-apt-repository ppa:git-core/ppa && \
-    apt-get update && \
-    sudo apt-get install git -y && \
     apt-get clean && \
     apt-get -y autoremove && \
     rm -rf /var/lib/apt/lists/*
